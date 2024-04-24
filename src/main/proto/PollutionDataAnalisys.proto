@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package pollution;
+
+service PollutionDataService {
+  // Receive data from Smart Water pH Level Meter
+  rpc ReceiveWaterData (WaterDataRequest) returns (DataResponse) {}
+
+  // Receive data from Air Quality Index Device
+  rpc ReceiveAirData (AirDataRequest) returns (DataResponse) {}
+
+  // Get pollution data indicating unacceptable levels of toxicity
+  rpc GetPollutionData (PollutionDataRequest) returns (PollutionDataResponse) {}
+}
+
+message WaterDataRequest {
+  string meter_id = 1;
+  float ph_level = 2;
+  // Add any other relevant data fields here
+}
+
+message AirDataRequest {
+  string device_id = 1;
+  float pollution_level = 2;
+  // Add any other relevant data fields here
+}
+
+message DataResponse {
+  string message = 1;
+  // Add any other relevant response fields here
+}
+
+message PollutionDataRequest {
+  // Add any filtering parameters here
+}
+
+message PollutionDataResponse {
+  repeated WaterDataRequest water_data = 1;
+  repeated AirDataRequest air_data = 2;
+  // Add any other relevant response fields here
+}

@@ -1,8 +1,7 @@
 syntax = "proto3";
 
-option java_multiple_files = true;
+option java_multiple_files = false;
 option java_package = "org.example";
-option java_outer_classname = "PHLevelMeterProto";
 
 service pHLevelMeter {
   // Sends a request to get the current pH level at a specific location
@@ -17,4 +16,5 @@ message PhLevelRequest {
 message PhLevelResponse {
   // Current pH level at the specified location
   float ph_level = 1;
+  string ph_status = 2;
 }

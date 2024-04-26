@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option java_multiple_files = true;
+option java_multiple_files = false;
 option java_package = "org.example";
 
 service AirQualityService {
@@ -8,13 +8,11 @@ service AirQualityService {
 }
 
 message AirQualityRequest {
-  // Add any necessary fields here
-  // For example, location information
   string location = 1;
 }
 
 message AirQualityResponse {
-  // Add the fields you want to return here
-  // For example, the air quality index value
   int32 air_quality_index = 1;
+  string air_status = 2;
+
 }

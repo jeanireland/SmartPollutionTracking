@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+option java_multiple_files = false;
+option java_package = "org.example";
+
+service SolarRadiationService {
+  rpc GetSolarRadiationLevel (SolarRadiationRequest) returns (SolarRadiationResponse) {}
+}
+
+message SolarRadiationRequest {
+  string location = 1;
+}
+
+message SolarRadiationResponse {
+  double solar_radiation_level = 1;
+}

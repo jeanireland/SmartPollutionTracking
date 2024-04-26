@@ -1,5 +1,7 @@
 package org.example;
 
+import com.ecwid.consul.v1.ConsulClient;
+import com.ecwid.consul.v1.agent.model.NewService;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import io.grpc.stub.StreamObserver;
@@ -9,20 +11,49 @@ import java.util.Random;
 
 public class AirQualityServer {
 
-    public static void main(String[] args) throws IOException, InterruptedException {
-        int port = 9091;
+    private static final int PORT = 9091;
+    private static final String SERVICE_NAME = "air-quality";
 
+    public static void main(String[] args) throws IOException, InterruptedException {
+        // Start the gRPC server
+        Server server = startGRPCServer(PORT);
+
+        // Register service with Consul
+        registerServiceWithConsul();
+
+        // Await server termination
+        server.awaitTermination();
+    }
+
+    private static Server startGRPCServer(int port) throws IOException {
         Server server = ServerBuilder.forPort(port)
                 .addService(new AirQualityServiceImpl())
                 .build();
 
         System.out.println("Server started, listening on port " + port);
         server.start();
-        server.awaitTermination();
+        return server;
+    }
+
+    private static void registerServiceWithConsul() {
+        ConsulClient consulClient = new ConsulClient();
+        NewService newService = new NewService();
+        newService.setName(SERVICE_NAME);
+        newService.setPort(PORT);
+
+        consulClient.agentServiceRegister(newService);
+        System.out.println("Service registered with Consul");
+    }
+
+    private static void deregisterServiceFromConsul() {
+        ConsulClient consulClient = new ConsulClient();
+        consulClient.agentServiceDeregister(SERVICE_NAME);
+        System.out.println("Service deregistered from Consul");
     }
 
     static class AirQualityServiceImpl extends AirQualityServiceGrpc.AirQualityServiceImplBase {
-        public void getAirQualityIndex(AirQualityIndex.AirQualityRequest request, StreamObserver<AirQualityIndex.AirQualityResponse> responseObserver) {
+        public void getAirQualityIndex(AirQualityIndex.AirQualityRequest request, StreamObserver
+                <AirQualityIndex.AirQualityResponse> responseObserver) {
             // Generate a random air quality index
             int airQualityIndex = generateRandomAirQualityIndex();
             // Calculate status based on the air quality index
@@ -59,5 +90,10 @@ public class AirQualityServer {
                 return "Hazardous";
             }
         }
+    }
+
+    // Hook to deregister service from Consul when server shuts down
+    static {
+        Runtime.getRuntime().addShutdownHook(new Thread(AirQualityServer::deregisterServiceFromConsul));
     }
 }

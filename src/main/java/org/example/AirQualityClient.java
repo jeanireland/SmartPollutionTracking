@@ -1,5 +1,4 @@
 package org.example;
-
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 

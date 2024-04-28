@@ -15,13 +15,13 @@ public class AirQualityServer {
     private static final String SERVICE_NAME = "air-quality";
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        // Start the gRPC server
+        // Starting the gRPC server
         Server server = startGRPCServer(PORT);
 
-        // Register service with Consul
+        // Registering service with Consul
         registerServiceWithConsul();
 
-        // Await server termination
+        // Awaiting server termination
         server.awaitTermination();
     }
 
@@ -54,7 +54,7 @@ public class AirQualityServer {
     static class AirQualityServiceImpl extends AirQualityServiceGrpc.AirQualityServiceImplBase {
         public void getAirQualityIndex(AirQualityIndex.AirQualityRequest request, StreamObserver
                 <AirQualityIndex.AirQualityResponse> responseObserver) {
-            // Generate a random air quality index
+            // Generating a random air quality index
             int airQualityIndex = generateRandomAirQualityIndex();
             // Calculate status based on the air quality index
             String status = calculateStatus(airQualityIndex);
@@ -69,7 +69,7 @@ public class AirQualityServer {
         }
 
         private int generateRandomAirQualityIndex() {
-            // Generate a random air quality index between 0 and 500
+            // Generating a random air quality index between 0 and 500
             Random random = new Random();
             return random.nextInt(501);
         }
